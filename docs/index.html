@@ -11,10 +11,11 @@
           border-radius:3px;
           margin:10px 10px 50px;  
         }
+        a{padding: 5px 20px;font-size:12px;}
     </style>
 </head>
 <body>
-<a href="javascript:history.go(-1)">&lt;&lt;BACK</a>    
+<a href="javascript:history.go(-1)">&lt;&lt;返回</a>    
 <div style="max-width:800px;position:relative">
   <div id='info'></div>   
   <div id='pg-0'></div>   
@@ -212,10 +213,12 @@ function macPaging(selector, onchangeCallback) {
     }
 }
 !function(){
- var info = document.querySelector('#info');
- macPaging('#pg-0',function(d){
-   info.textContent = JSON.stringify(d);
- }).render({page:1,max:1000});
+  var info = document.querySelector('#info');
+  var ins = macPaging('#pg-0',function(d){
+    info.textContent = JSON.stringify(d);
+   });
+   ins.render({page:1,max:1000});
+   ins.onchange(); 
 }();
 
 </script>
