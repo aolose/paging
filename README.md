@@ -7,8 +7,7 @@
 嗯 是写的一个栗子 所以 木有多少复杂配置 (๑•̀ㅂ•́) ✧
 
 ### 演示
-
-注意分页在右边 
+![preview](https://aolose.github.io/paging/0.JPG)
 
 [传送门](https://aolose.github.io/paging/index.html)
 
