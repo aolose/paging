@@ -1,0 +1,208 @@
+<html>
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+<div id='pg-0'></div>
+<div id='info'></div>
+<script>
+function macPaging(selector, onchangeCallback) {
+    var d = document, create = function (s, child) {
+        var id, tag, className;
+        var r = /(\w+)?(?:#([\w\d_-]+))?((?:\.[\w\d_-]+)+)?/.exec(s);
+        if (r) {
+            tag = r[1];
+            id = r[2];
+            className = r[3];
+        }
+        var dom = d.createElement(tag || 'div');
+        if (id) dom.id = id;
+        if (className) dom.className = className.substr(1).replace(/\./g, ' ');
+        if (child && child instanceof Node) dom.appendChild(child);
+        else dom.textContent = child||'';
+        return dom;
+    };
+    if (!d.head.querySelector('#mac-paging')) {
+        d.head.appendChild(create('style#mac-paging', '.mac-table-paging{position:absolute;right:28px;bot' +
+            'tom:24px}.mac-paging-box{float:right;white-space:nowrap }.mac-paging-box *{float:left;displa' +
+            'y:block;margin:0 3px;line-height:20px;font-size:12px!important;color:#777}.mac-paging-box .g' +
+            'o,.mac-paging-box .go-btn{height:21px!important;border:1px solid #d3d3d3;width:43px;backgrou' +
+            'nd:#fff;padding:0 5px}.mac-paging-box .go-btn{cursor:pointer;margin-left:-1px}.mac-paging-bo' +
+            'x .pg-split{height:16px;margin:3px 5px;width:1px;background:#d3d3d3}.mac-paging-box .prev,.m' +
+            'ac-paging-box .next,.mac-paging-box .page-num{padding:0 4px;border:1px solid #d3d3d3;height:' +
+            '21px;margin:0 3px;border-radius:3px;cursor:pointer}.mac-paging-box .prev,.mac-paging-box .ne' +
+            'xt{width:24px;background:none;color:#aaa}.mac-paging-box .prev.dis,.mac-paging-box .next.dis' +
+            '{opacity:.6;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";cursor:auto}.ma' +
+            'c-paging-box .prev:after,.mac-paging-box .next:after{content:\'\';height:6px;width:6px;displ' +
+            'ay:block;-webkit-transform:rotateZ(45deg);transform:rotateZ(45deg);border:1px solid currentc' +
+            'olor;position:relative;top:6px}.mac-paging-box .prev:after{border-right:0;border-top:0;left:' +
+            '4px}.mac-paging-box .next:after{border-left:0;border-bottom:0;left:1px}.mac-paging-box .page' +
+            '-num.skip{cursor:auto;width:18px;letter-spacing:-1px}.mac-paging-box .page-num.act{backgroun' +
+            'd:#d7d7d7;color:#fff}'));
+    }
+    var p = d.querySelector(selector);
+    if (p) {
+        if(!p.instance){
+            var onPageChangeFn = onchangeCallback;
+            var hasCb = 'function' === typeof onPageChangeFn;
+            var rendertimer, onchangeTimer;
+            var total = 0, max = 1, min = 1, data = {page: 1, size: 5};
+            var dom = create('.mac-paging-box');
+            var cb;
+
+            function fixPage(v) {
+                v = v >> 0;
+                if (v > max) v = max;
+                if (v < min) v = min;
+                return v;
+            }
+
+            function onchange() {
+                if (hasCb) {
+                    var onPageChangeFn = instance.onchange;
+                    clearTimeout(onchangeTimer)
+                    onchangeTimer = setTimeout(onPageChangeFn.bind(null, data), 100);
+                }
+            }
+            var instance = p.instance = {
+                render:function(opt){
+                    opt = opt||{};
+                    if('page' in opt)data.page = opt.page;
+                    if('size' in opt)data.size = opt.size;
+                    if('max' in opt)max = opt.max;
+                    if('total' in opt)total = opt.total;
+                    render()
+                },
+                set page(v) {
+                    v = fixPage(v);
+                    if (v !== data.page) {
+                        data.page = v;
+                        onchange()
+                        render();
+                    }
+                },
+                set onchange(v){
+                    var hasCb = 'function' === typeof v;
+                    onPageChangeFn = v;
+                },
+                get onchange(){
+                  return onPageChangeFn;
+                },
+                get page() {
+                    return data.page
+                },
+                set size(v) {
+                    v = v >> 0;
+                    if (v < 1) v = 1;
+                    if (v !== data.size) {
+                        data.size = v;
+                        total = v*data.size;
+                        onchange();
+                        render();
+                    }
+                },
+                get size() {
+                    return data.size;
+                },
+                set max(v){
+                    v=v>>0;if(v<1)v=1;
+                    if(max!==v){
+                        max = v;
+                        var p = fixPage(data.page);
+                        if(data.page!==p){
+                            instance.page = p
+                        }else render();
+                    }
+                },
+                get max(){
+                    return max;
+                },
+                set total(v) {
+                    var size = data.size;
+                    v = v >> 0;
+                    if (v < 0) v = 0;
+                    if (total !== v) {
+                        max = (v + size - 1) / size >> 0;
+                        data.page = fixPage(data.page);
+                        render();
+                    }
+                },
+                get total() {
+                    return total;
+                }
+            }
+            function render() {
+                clearTimeout(rendertimer);
+                rendertimer = setTimeout(function () {
+                    dom.innerHTML = '';
+                    var page = instance.page
+                    var hasPrev = page !== min;
+                    var hasNext = page !== max;
+                    var lis = [1];
+                    var sub = [];
+                    var p = page % 2+1;
+                    var s = Math.max(2, page - p );
+                    var e = Math.min(max, s + 3);
+                    s = Math.max(2, e - 3 );
+                    for (var i = s; i <= e; i++) {
+                        sub.push(i);
+                    }
+                    if (sub[0] - 1 > 1) {
+                        lis.push('...')
+                    }
+                    var sLast = sub[sub.length - 1];
+                    if (sLast < max) {
+                        if (max - sLast > 2) sub.push('...')
+                        sub.push(max);
+                    }
+                    lis = lis.concat(sub);
+                    dom.appendChild(create('.prev' + (hasPrev ? '' : '.dis'))).onclick = hasPrev && function () {
+                        instance.page--;
+                    }
+                    lis.forEach(function (v) {
+                        var isN = 'number' === typeof v
+                        dom.appendChild(
+                            create(
+                                '.page-num' + (instance.page === v ? '.act' : '') + (isN ? '' : '.skip'), v)
+                        ).onclick = isN && function () {
+                            instance.page = v
+                        }
+                    })
+                    dom.appendChild(create('.next' + (hasNext ? '' : '.dis'))).onclick = hasNext && function () {
+                        instance.page++;
+                    }
+                    dom.appendChild(create('.pg-split'));
+                    var go = dom.appendChild(create('input.go'));
+                    go.type = 'text';
+                    go.oninput = function () {
+                        go.value = fixPage(go.value);
+                    }
+                    go.onkeydown = function (e) {
+                        if (e.Enter) {
+                            instance.page = fixPage(go.value);
+                            return false;
+                        }
+                    }
+                    dom.appendChild(create('.go-btn', '确定')).onclick = function () {
+                        instance.page = fixPage(go.value);
+                    }
+                }, 100)
+            }
+            render();
+            p.innerHTML = '';
+            p.appendChild(dom);
+        }
+        p.instance.onchange = onchangeCallback;
+        return p.instance;
+    }
+}
+!function(){
+ var info = document.querySelector('#info');
+ macPaging('#pg-01',function(d){
+   info.textContent = JSON.stringify(d);
+ }).render({page:1,max:1000});
+}();
+
+</script>
+</body>
+</html>
