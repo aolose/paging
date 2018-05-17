@@ -198,7 +198,7 @@ function macPaging(selector, onchangeCallback) {
 }
 !function(){
  var info = document.querySelector('#info');
- macPaging('#pg-01',function(d){
+ macPaging('#pg-0',function(d){
    info.textContent = JSON.stringify(d);
  }).render({page:1,max:1000});
 }();
