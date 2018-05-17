@@ -1,10 +1,24 @@
 <html>
 <head>
 <meta charset="utf-8">
+    <style>
+        #info{
+          padding:20px;
+          font-size:12px;
+          color:#999;
+          border:1px solid #ddd;
+          background:#f2f2f2;
+          border-radius:3px;
+          margin:10px 10px 50px;  
+        }
+    </style>
 </head>
 <body>
-<div id='pg-0'></div>
-<div id='info'></div>
+<a href="javascript:history.go(-1)">&lt;&lt;BACK</a>    
+<div style="max-width:800px;position:relative">
+  <div id='info'></div>   
+  <div id='pg-0'></div>   
+</div>
 <script>
 function macPaging(selector, onchangeCallback) {
     var d = document, create = function (s, child) {
