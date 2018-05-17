@@ -22,9 +22,9 @@
 var instance = macPaging(selector,onSizeOrCurrPageChangeCallBack(data))
 instance.render(config); // 不触发change事件渲染 config 选项 见下面
 instance.change(); // 强制触发onSizeOrCurrPageChangeCallBack
-instance.page++ // 下一页
+instance.page++ // 下一页 page 改变会自动重新渲染组件
 instance.page-- // 上一页
-instance.size= 100 // 设置size
+instance.size= 100 // 设置size size 改变会自动重新渲染组件
 instance.total = 1000 // 设置总数量 会改变总页数
 instance.max = 22 // 设置总页数 会改变最大数量
 ```
