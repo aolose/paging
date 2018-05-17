@@ -15,7 +15,7 @@ function macPaging(selector, onchangeCallback) {
         return dom;
     };
     if (!d.head.querySelector('#mac-paging')) {
-         d.head.appendChild(create('style#mac-paging', 
+        d.head.appendChild(create('style#mac-paging', 
                               '*{box-sizing:border-box}.mac-table-paging{position:absolute;right:28px;bot' +
             'tom:24px}.mac-paging-box{float:right;white-space:nowrap }.mac-paging-box *{float:left;displa' +
             'y:block;margin:0 3px;line-height:20px;font-size:12px!important;color:#777}.mac-paging-box .g' +
@@ -56,15 +56,18 @@ function macPaging(selector, onchangeCallback) {
                     clearTimeout(onchangeTimer)
                     onchangeTimer = setTimeout(onPageChangeFn.bind(null, data), 100);
                 }
+                return this;
             }
             var instance = p.instance = {
+                change:onchange, 
                 render:function(opt){
                     opt = opt||{};
                     if('page' in opt)data.page = opt.page;
                     if('size' in opt)data.size = opt.size;
                     if('max' in opt)max = opt.max;
                     if('total' in opt)total = opt.total;
-                    render()
+                    render();
+                    return this;
                 },
                 set page(v) {
                     v = fixPage(v);
