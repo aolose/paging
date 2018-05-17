@@ -7,6 +7,9 @@
 嗯 是写的一个栗子 所以 木有复杂配置 (๑˙―˙๑)
 
 ### 演示
+
+注意分页在右边 
+
 [传送门](https://aolose.github.io/paging/index.html)
 
 
