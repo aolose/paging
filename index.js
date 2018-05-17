@@ -15,7 +15,8 @@ function macPaging(selector, onchangeCallback) {
         return dom;
     };
     if (!d.head.querySelector('#mac-paging')) {
-        d.head.appendChild(create('style#mac-paging', '.mac-table-paging{position:absolute;right:28px;bot' +
+         d.head.appendChild(create('style#mac-paging', 
+                              '*{box-sizing:border-box}.mac-table-paging{position:absolute;right:28px;bot' +
             'tom:24px}.mac-paging-box{float:right;white-space:nowrap }.mac-paging-box *{float:left;displa' +
             'y:block;margin:0 3px;line-height:20px;font-size:12px!important;color:#777}.mac-paging-box .g' +
             'o,.mac-paging-box .go-btn{height:21px!important;border:1px solid #d3d3d3;width:43px;backgrou' +
