@@ -22,7 +22,7 @@
  */
 var instance = macPaging(selector,onSizeOrCurrPageChangeCallBack(data))
 instance.render(config); // 不触发change事件渲染 config 选项 见下面
-instance.onchange(); // 强制触发change事件
+instance.change(); // 强制触发onSizeOrCurrPageChangeCallBack
 instance.page++ // 下一页
 instance.page-- // 上一页
 instance.size= 100 // 设置size
